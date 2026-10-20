@@ -16,6 +16,9 @@ def simulateQueue(T_final, lambda_arrival, mu_service, C, runs=1):
     dt = 0.01                          # Δt / time step  
     N = int(round(T_final / dt)) + 1   # number of time points from T = (N-1)Δt (in this case: 16,001 when T_final = 160)
     all_Q = np.zeros((runs, N))        # One table: Has runs rows and N columns (eg: 100 x 16,001)
+    time_points = np.arange(N) * dt   # time in minutes (x-axis) (updated for task b)
+
+    plt.figure() 
 
     #2: for loop for R simulations (rows)
     for r in range(runs):              
@@ -31,6 +34,7 @@ def simulateQueue(T_final, lambda_arrival, mu_service, C, runs=1):
                 Q[t+1] = 0 # queue length cannot be negative 
 
         all_Q[r] = Q # stores the run in row r of the table 
+        plt.plot(time_points, Q, linewidth=0.8, alpha=0.7) # curve per run
 
     # sigma = fixed noise strength. Amplifies the omega
     # Omega = random number each step
@@ -51,6 +55,16 @@ def simulateQueue(T_final, lambda_arrival, mu_service, C, runs=1):
     print(f"Mean occupancy: {occupancy * 100:.1f} %")
     print(f"Total run time: {end - start:.2f} seconds")
 
+    #6 plotting results / plot figure (updated for task b)
+    plt.xlabel('Time (minutes)')
+    plt.ylabel('Queue length')
+    plt.title('SDE queue simulation (' + str(runs) + ' runs)')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig('queue_runs_taskb.png', dpi=500)
+    plt.close()
 
-#6: invoke the function 
-simulateQueue(160, 4., 0.4, 16, 100)
+
+#7: invoke the function 
+simulateQueue(120, 400/120, 0.2, 32, 5) #change 5 to 100 for task c
+                                          #task d = 100 runs, and 0.1 service rate
